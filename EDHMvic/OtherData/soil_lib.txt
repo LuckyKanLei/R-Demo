@@ -1,0 +1,15 @@
+SoilTextureClasses	Code	Porosity_	FieldCapacity_	WiltingPoint_	WettingFrontSoilSuctionHead_mm 	SaturatedSoilSuctionHead_mm	SaturatedHydraulicConductivity_mm_day
+Clay	3	0.475	0.36	0.27	316.3	468	14.4
+ClayHeavy	1	0.46	0.35	0.24	268.5	365	600
+ClayLoam	5	0.464	0.34	0.21	208.8	263	48
+Loam	9	0.463	0.29	0.14	88.9	355	316.8
+LoamySand	12	0.437	0.15	0.06	61.3	36	1435.2
+Sand	13	0.437	0.08	0.03	49.5	69	5654.4
+SandyClay	8	0.43	0.31	0.23	239	98	28.8
+SandyClayLoam	10	0.398	0.27	0.17	218.5	135	72
+SandyLoam	11	0.453	0.21	0.09	110.1	141	523.2
+Silt	6	0.52	0.28	0.08	235.8	688	2061.6
+SiltyClay	2	0.479	0.37	0.25	292.2	324	24
+SiltyClayLoam	4	0.471	0.36	0.21	273	617	48
+SiltyLoam	7	0.501	0.32	0.12	166.8	759	163.2
+Other	0	0.4	0.3	0.1	178	123	200
