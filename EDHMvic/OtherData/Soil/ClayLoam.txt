@@ -1,3 +1,0 @@
-Sand	Clay	Silt	Gravel	Salinity	  OM	  Texture Class	  WP	  FC	 Sat	   AW	Sat Cond	     BD	Moisture	Matric Pot.	Matric+Osmotic	   Cond.
- %Wt	 %Wt	 %Wt	  %Vol	    dS/m	 %Wt	               	%Vol	%Vol	%Vol	cm/cm	   in/hr	 g/cm^3	    %Vol	        kPa	           kPa	   mm/hr
-  33	  34	  33	     0	     0.0	 2.5	      Clay Loam	21.3	35.0	47.2	 0.14	    4.56	   1.40	    47.2	          5	             5	 4.56E+0
