@@ -5,13 +5,13 @@
 # install_github("MomentVon/OptimizationPrg")
 # install_github("MomentVon/VectorTools")
 # install_github("MomentVon/EDHM")
-# install_github("MomentVon/EDHMvic")
 #### If prompted to install other dependent packages, install them together. ####
 
 #### Load necessary packages ####
 library(HMtools)
 library(plyr)  ## join
-library(EDHMvic)
+library(EDHM)
+library(mcga)
 
 #### Set file path ####
 wdOtherData = "./OtherData"
@@ -81,6 +81,9 @@ colnames(TopSoilParam) = paste("T_",names(SoilLib),sep = "")
 colnames(SubSoilParam) = paste("S_",names(SoilLib),sep = "")
 GridSoilParam = as.data.frame(cbind(TopSoilParam, SubSoilParam[,2:infoSoilParamN]))
 
+#### read observe Q in cuntan sattion ####
+ObserveQ = read.table(filePathObserve)
+ObserveQ89_93 = ObserveQ[3654 : (3653 + 1826),1]
 
 #### The reading of weather data is not shown here, because the weather data is too large to upload, 
 #### but there is an example of IDW interpolation in the HMTools package. 
@@ -100,19 +103,42 @@ GridL <- list(TypeGridID = TypeGridID,
                  GridDEM = GridDEM4UH)
 
 ClsNa <- c("VIC", "PenmanMonteith", "GreenAmpt", "Gash", "ARNO", "G2RES")
-UPMethondList = list("Shipeng", "Shipeng", "Shipeng", "Shipeng")
-VICInList <- InListMake_VIC("1989-1-1",
-                            "1993-12-31",
-                            ClsNa,
-                            MetroList,
-                            GeoL,
-                            GridL,
-                            UPMethondList,
-                            180,
-                            35)
+class(ClsNa) <- ClsNa
+UPMethondList <- list("Shipeng", "Shipeng", "Shipeng", "Shipeng")
+VICInList <- InListMake(ClsNa,
+                        "1989-1-1",
+                        "1993-12-31",
+                        
+                        MetroList,
+                        GeoL,
+                        GridL,
+                        UPMethondList,
+                        180,
+                        35)
 ParamterMax = c(15, 300, 600, 900, 0.9, 2.7, 0.7, 30, 9, 1,1,15,7,7,7,10,10,10,15)
 ParamterMin = c(5, 50, 100, 150, 0.1, 1.3, 0.1,9, 0.1, 0.1, 0.1, 3,0.5, 0.5, 0.5 , 0.5,0.5,0.5,0.5)
 ParamterModell = 0.5 * (ParamterMax + ParamterMin)
-VICPaList <- PaListMake_VIC(ParamterModell)
+class(ParamterModell) <- ClsNa
+VICPaList <- PaListMake(ParamterModell)
 #### run VIC ####
-system.time(Q <- MODELL_VIC(VICInList, VICPaList))
+system.time(Q <- MODELL(VICInList, VICPaList))
+
+ParamterCalibrateMax = c(15, 300, 600, 900, 0.9, 2.7, 0.7, 30, 9, 1,1,15,7,7,7,10,10,10,15)
+ParamterCalibrateMin = c(5, 50, 100, 150, 0.1, 1.3, 0.1,9, 0.1, 0.1, 0.1, 3,0.5, 0.5, 0.5 , 0.5,0.5,0.5,0.5)
+#### calibrate parameter set with GA ####
+FitGA = mcga2(fitness  = CALIBRATE, 
+              InList = VICInList, 
+              Observe = ObserveQ89_93, 
+              min = ParamterCalibrateMin, 
+              max = ParamterCalibrateMax, 
+              popSize =20, 
+              maxiter =20)
+#### ga with parallel ####
+# FitGA = mcga2(fitness  = CALIBRATE, 
+#               InList = VICInList, 
+#               Observe = ObserveQ89_93, 
+#               min = ParamterCalibrateMin, 
+#               max = ParamterCalibrateMax, 
+#               popSize =20, 
+#               maxiter =20,
+#               parallel = T)
